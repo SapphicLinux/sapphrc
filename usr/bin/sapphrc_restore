@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cd "$HOME/.config/sapphrc/backups"
+git pull --no-edit
+
 sapphrc_config="$HOME/.config/sapphrc"
 
 cat "${sapphrc_config}/active_profiles" | while read profile_name
