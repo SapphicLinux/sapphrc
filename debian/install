@@ -1,0 +1,5 @@
+etc/bash_completion.d/spm etc/bash_completion.d/
+lib/sapphrc/* lib/sapphrc/
+usr/bin/* usr/bin/
+usr/share/doc/sapphrc/* usr/share/doc/sapphrc/
+lib/sapphrc/* lib/sapphrc/

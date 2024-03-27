@@ -1,0 +1,64 @@
+#!/bin/bash
+
+
+sapphrc_config="$HOME/.config/sapphrc"
+if [ -f "${aspphic_config}/.init_complete"];then
+  echo "already setup"
+  exit 0
+fi
+
+mkdir -p "${sapphrc_config}"
+mkdir -p "${HOME}/.sapphrc"
+
+while true;do
+  read -p "use an existing git repo? (y/n)" gitrepo_exists
+  case $gitrepo_exists in
+    [Yy] )
+      read -p "Enter YOUR git repo url: " git_url
+      git clone "${git_url}" "${sapphic_config}/backups"
+      touch "${aspphic_config}/.init_complete"
+      backup_count="0"
+      backups=($(ls "${sapphrc_config}/backups/"))
+      for b in ${backups[@]};do
+        echo $b
+        [ -d "${sapphrc_config}/backups/${b}" ] && backup_count=$(($backup_count+1))
+      done
+
+      if [[ backup_count -gt 0 ]];then
+        read -p "Found existing profile(s). Join one? (Y/n) " yn
+        [[ "${yn}" =~ ^([nN][oO]|[nN])$ ]] || sapphrc profile join
+      else
+        sapphrc profile create default
+      fi
+      break
+      ;;
+    [Nn] )
+      mkdir -p "${sapphrc_config}/backups"
+      cd "${sapphrc_config}/backups"
+      git init
+      git add "${sapphrc_config}/backups/."
+      git commit -m "first commit"
+      git branch -M main
+      read -p "Enter YOUR git repo url: " git_url
+      git remote add origin "${git_url}"
+      git push -u origin main
+      break
+      ;;
+  esac
+done
+
+##link ~/.sapphrc/* files to .bashrc
+sapphrc_bashrc="$(awk '/.sapphrc/,/done/' ~/.bashrc)"
+if [[ "${#sapphrc_bashrc}" -eq 0 ]];then
+  echo "for file in ~/.sapphrc/* ; do" >> $HOME/.bashrc
+  echo "  if [ -f \"$file\" ] ; then" >> $HOME/.bashrc
+  echo "    source \"$file\"" >> $HOME/.bashrc
+  echo "  fi" >> $HOME/.bashrc
+  echo "done" >> $HOME/.bashrc
+fi
+
+mkdir -p $HOME/.cache/sapphrc/
+crontab -l > $HOME/.cache/sapphrc/crontab
+echo "*/15 * * * * sapphrc_updown" >> $HOME/.cache/sapphrc/crontab
+crontab $HOME/.cache/sapphrc/crontab
+rm $HOME/.cache/sapphrc/crontab

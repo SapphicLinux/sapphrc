@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sapphrc_restore
+sapphrc_backup

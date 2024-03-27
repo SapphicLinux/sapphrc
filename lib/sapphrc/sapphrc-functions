@@ -1,0 +1,98 @@
+#!/bin/bash
+
+sapphrc_config="$HOME/.config/sapphrc"
+
+usage(){
+  echo -n "spm "
+  cat /usr/share/doc/sapphrc/$(basename $0)
+}
+
+check_name(){
+  if [ -z "${1}" ];then
+    $2 || echo "Profile name cannot be blank"
+    return 0
+  fi
+  if [[ ! "$1" =~ ^[a-zA-Z0-9_-]+$ ]];then
+    $2 || echo "Profile name can only contain numbers, letters, hyphens, and underscores"
+    return 0
+  fi
+  return 1
+}
+
+validate_profile(){
+  profile_name="${1}"
+  first_check=true
+  while check_name "${profile_name}" "$first_check";do
+    first_check=false
+    if [ "$COMMAND" == "create" ];then
+      read -p "Profile Name: " profile_name
+    else
+      backups=( "${sapphrc_config}/backups/"* )
+      echo "$backups"
+      if [ -d "${backups[0]}" ];then
+        select d in $(ls "${sapphrc_config}/backups/");do test -n "$d" && break; echo ">>> Invalid Selection"; done
+        profile_name="$d"
+      else
+        echo "No backups exist!"
+        exit 1
+      fi
+    fi
+  done
+  sapphrc_profile="${sapphrc_config}/backups/${profile_name}"
+  sapphrc_profile_rcdir="${sapphrc_profile}/home/.sapphrc"
+  sapphrc_profile_rc="${sapphrc_profile_rcdir}/${profile_name}"
+}
+
+inex_func(){
+  validate_profile "${profile_name}"
+  [ ${#@} -eq 0 ] && echo "No files selected" && exit 1
+  for file in "$@";do
+    fullpath=$(realpath "${file}")
+    if ! [[ "$fullpath" =~ ^"$HOME/".* ]];then
+      echo "file not in home dir"
+      break
+    fi
+    if ! [[ -d "$file" || -f "$file" ]];then
+      echo "file does not exist"
+      break
+    fi
+    filelist+=(${fullpath#$HOME/})
+  done
+
+  for e in ${filelist[@]};do
+    echo $e
+  done
+
+  read -p "${bold}Add the listed files/directories to profile '${profile_name}'?${normal} (Y/n)" yn
+  if ! [[ "${yn}" =~ ^([nN][oO]|[nN])$ ]];then
+    for e in ${filelist[@]};do
+      if grep -q ^"${e}"$ "${sapphrc_config}/backups/${profile_name}/${inex}";then
+        echo "already in file"
+      else
+        echo $e|tee -a "${sapphrc_config}/backups/${profile_name}/${inex}" >/dev/null
+      fi
+    done
+  fi
+}
+
+inex_rm(){
+  validate_profile "${profile_name}"
+  i=0
+  while read line; do
+    rmfiles+=("$i");i=$(($i+1))
+    rmfiles+=("$line")
+    rmfiles+=("$line")
+  done < "${sapphrc_config}/backups/${profile_name}/${inex}"
+  [ ${#rmfiles[@]} -eq 0 ] && echo "No files in list" && exit 1
+  choices=($(dialog --checklist --output-fd 1 "Select options:" 0 0 0 "${rmfiles[@]}"))
+  if [ $? -ne 0 ]; then
+    echo "User canceled."
+    exit 1
+  fi
+
+  for choice in "${choices[@]}"; do
+    rmlines="${rmlines}$((${choice}+1))d;"
+  done
+  sed -i "${rmlines}" "${sapphrc_config}/backups/${profile_name}/${inex}"
+  echo "Removed ${#choices[@]} paths from ${profile_name} ${inex} list"
+}

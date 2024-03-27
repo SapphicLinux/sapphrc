@@ -1,0 +1,11 @@
+#!/bin/bash
+
+sapphrc_config="$HOME/.config/sapphrc"
+
+cat "${sapphrc_config}/active_profiles" | while read profile_name
+do
+  backup_homedir="$sapphrc_config/backups/${profile_name}/home"
+  include_list="$sapphrc_config/backups/${profile_name}/include"
+  exclude_list="$sapphrc_config/backups/${profile_name}/exclude"
+  rsync -avSH --files-from="${include_list}" --exclude-from="${exclude_list}" --exclude '.config/sapphrc/' "${HOME}" "${backup_homedir}"
+done
