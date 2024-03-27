@@ -27,9 +27,17 @@ push() {
   sapphrc_push $@
 }
 
+include(){
+  sapphrc_include $@
+}
+
+exclude(){
+  sapphrc_exclude $@
+}
+
 usage() {
   echo "Sapphic Package Manager v${VERSION}"
-  cat ./usr/share/doc/sapphrc/sapphrc
+  cat /usr/share/doc/sapphrc/sapphrc
   sed -e 's/^/  /' /usr/share/doc/sapphrc/sapphrc_setup
   sed -e 's/^/  /' /usr/share/doc/sapphrc/sapphrc_profile
   sed -e 's/^/  /' /usr/share/doc/sapphrc/sapphrc_backup
@@ -37,7 +45,7 @@ usage() {
 }
 
 case $COMMAND in
-  setup|profile|backup|restore|updown|push )
+  setup|profile|backup|restore|updown|push|include|exclude )
     shift 1;;&
   setup )
     setup $@;;
@@ -51,6 +59,10 @@ case $COMMAND in
     updown $@;;
   push )
     push $@;;
+  include )
+    include $@;;
+  exclude )
+    exclude $@;;
   *|usage )
     usage;;
 esac

@@ -1,8 +1,7 @@
 #!/bin/bash
 
-source ./lib/sapphrc/sapphrc-functions
-source ./lib/sapphrc/sapphrc-font
-validate_backupdir
+source /lib/sapphrc/sapphrc-functions
+source /lib/sapphrc/sapphrc-font
 
 COMMAND="${1}"
 
@@ -58,7 +57,7 @@ list(){
 
 case $COMMAND in
   create|remove|join|leave )
-    shift 1;
+    validate_backupdir;shift 1;
     validate_profile $@;;&
   create )
     create $@;;

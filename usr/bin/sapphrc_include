@@ -2,9 +2,8 @@
 
 COMMAND=$1
 
-source ./lib/sapphrc/sapphrc-functions
-source ./lib/sapphrc/sapphrc-font
-validate_backupdir
+source /lib/sapphrc/sapphrc-functions
+source /lib/sapphrc/sapphrc-font
 
 inex="include"
 
@@ -26,6 +25,8 @@ while getopts 'hp:' flag; do
     h ) usage;exit 1 ;;
   esac
 done
+
+validate_backupdir
 
 case "${action}" in
   add )

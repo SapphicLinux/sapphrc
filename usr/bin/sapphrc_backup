@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source ./lib/sapphrc/sapphrc-functions
-source ./lib/sapphrc/sapphrc-font
+source /lib/sapphrc/sapphrc-functions
+source /lib/sapphrc/sapphrc-font
 validate_backupdir
 
 sapphrc_config="$HOME/.config/sapphrc"
@@ -11,5 +11,9 @@ do
   backup_homedir="$sapphrc_config/backups/${profile_name}/home"
   include_list="$sapphrc_config/backups/${profile_name}/include"
   exclude_list="$sapphrc_config/backups/${profile_name}/exclude"
-  rsync -avSH --files-from="${include_list}" --exclude-from="${exclude_list}" --exclude '.config/sapphrc/' "${HOME}" "${backup_homedir}"
+  echo "${include_list}"
+  echo "${exclude_list}"
+  echo "${HOME}"
+  echo "${backup_homedir}"
+  rsync -arvSH --files-from="${include_list}" --exclude-from="${exclude_list}" --exclude '.config/sapphrc/' "${HOME}" "${backup_homedir}"
 done

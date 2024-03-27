@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sapphrc_config="$HOME/.config/sapphrc"
-if [ -f "${aspphic_config}/.init_complete" ];then
+if [ -f "${aspphic_config}/backups/.init_complete" ];then
   echo "already setup"
   exit 0
 fi
@@ -14,12 +14,11 @@ while true;do
   case $gitrepo_exists in
     [Yy] )
       read -p "Enter YOUR git repo url: " git_url
-      git clone "${git_url}" "${sapphic_config}/backups"
-      touch "${aspphic_config}/.init_complete"
+      git clone "${git_url}" "${sapphrc_config}/backups"
+      touch "${sapphrc_config}/backups/.init_complete"
       backup_count="0"
       backups=($(ls "${sapphrc_config}/backups/"))
       for b in ${backups[@]};do
-        echo $b
         [ -d "${sapphrc_config}/backups/${b}" ] && backup_count=$(($backup_count+1))
       done
 
@@ -35,7 +34,7 @@ while true;do
       mkdir -p "${sapphrc_config}/backups"
       cd "${sapphrc_config}/backups"
       git init
-      touch ./active_profiles
+      touch "${sapphrc_config}/backups/.init_complete"
       git add .
       git commit -m "first commit"
       git branch -M main
@@ -51,8 +50,8 @@ done
 sapphrc_bashrc="$(awk '/.sapphrc/,/done/' ~/.bashrc)"
 if [[ "${#sapphrc_bashrc}" -eq 0 ]];then
   echo "for file in ~/.sapphrc/* ; do" >> $HOME/.bashrc
-  echo "  if [ -f \"$file\" ] ; then" >> $HOME/.bashrc
-  echo "    source \"$file\"" >> $HOME/.bashrc
+  echo "  if [ -f \""'$file'"\" ] ; then" >> $HOME/.bashrc
+  echo "    source \""'$file'"\"" >> $HOME/.bashrc
   echo "  fi" >> $HOME/.bashrc
   echo "done" >> $HOME/.bashrc
 fi

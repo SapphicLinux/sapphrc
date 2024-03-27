@@ -3,7 +3,7 @@
 sapphrc_config="$HOME/.config/sapphrc"
 
 usage(){
-  echo -n "spm "
+  echo -n "sapphrc "
   cat /usr/share/doc/sapphrc/$(basename $0)
 }
 
@@ -98,5 +98,10 @@ inex_rm(){
 }
 
 validate_backupdir(){
-  [ -d "$HOME/.config/sapphrc/backups/.git" ] || echo "git repo not initialized! Something's gone wrong" && exit 1
+  if [ -d "$HOME/.config/sapphrc/backups/.git" ];then
+    echo "backup folder looks good!"
+  else
+    echo "git repo not initialized! Something's gone wrong"
+    exit 1
+  fi
 }
