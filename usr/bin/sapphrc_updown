@@ -12,7 +12,7 @@ if [[ "${gs}" == *"modified"* && "${reslog}" == "" ]];then
   exit 1
 elif [[ $gs == *"modified"* ]];then
 #local changes exist
-  sapphrc_backup
+  sapphrc_push
 elif [[ "${reslog}" == "" ]];then
 #remote changes exist
   sapphrc_restore
