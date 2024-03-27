@@ -6,14 +6,12 @@ Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
 Standards-Version: 4.6.2
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Browser: https://salsa.debian.org/debian/sapphrc
-#Vcs-Git: https://salsa.debian.org/debian/sapphrc.git
+Homepage: https://github.com/SapphicLinux/sapphrc
 
 Package: sapphrc
 Architecture: all
 Multi-Arch: foreign
 Depends:
- ${misc:Depends},
-Description: <insert up to 60 chars description>
+ ${misc:Depends}, git,rsync
+Description: dotfiles backup and profiles
  <Insert long description, indented with spaces.>
