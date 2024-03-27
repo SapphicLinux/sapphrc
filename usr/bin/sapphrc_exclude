@@ -4,6 +4,7 @@ COMMAND=$1
 
 source ./lib/sapphrc/sapphrc-functions
 source ./lib/sapphrc/sapphrc-font
+validate_backupdir
 
 inex="exclude"
 

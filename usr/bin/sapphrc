@@ -19,6 +19,14 @@ restore() {
   sapphrc_restore $@
 }
 
+updown() {
+  sapphrc_updown $@
+}
+
+push() {
+  sapphrc_push $@
+}
+
 usage() {
   echo "Sapphic Package Manager v${VERSION}"
   cat ./usr/share/doc/sapphrc/sapphrc
@@ -29,7 +37,7 @@ usage() {
 }
 
 case $COMMAND in
-  setup|profile|backup|restore )
+  setup|profile|backup|restore|updown|push )
     shift 1;;&
   setup )
     setup $@;;
@@ -39,6 +47,10 @@ case $COMMAND in
     backup $@;;
   restore )
     restore $@;;
+  updown )
+    updown $@;;
+  push )
+    push $@;;
   *|usage )
     usage;;
 esac

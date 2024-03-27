@@ -96,3 +96,7 @@ inex_rm(){
   sed -i "${rmlines}" "${sapphrc_config}/backups/${profile_name}/${inex}"
   echo "Removed ${#choices[@]} paths from ${profile_name} ${inex} list"
 }
+
+validate_backupdir(){
+  [ -d "$HOME/.config/sapphrc/backups/.git" ] || echo "git repo not initialized! Something's gone wrong" && exit 1
+}

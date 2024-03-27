@@ -1,5 +1,9 @@
 #!/bin/bash
 
+source ./lib/sapphrc/sapphrc-functions
+source ./lib/sapphrc/sapphrc-font
+validate_backupdir
+
 cd "$HOME/.config/sapphrc/backups"
 sapphrc_backup
 gs="$(git status | grep -i 'modified')"
