@@ -1,0 +1,74 @@
+#!/bin/bash
+
+source /lib/sapphrc/sapphrc-functions
+source /lib/sapphrc/sapphrc-font
+
+COMMAND="${1}"
+
+sapphrc_config="${HOME}/.config/sapphrc"
+
+create(){
+  mkdir -p "${sapphrc_profile_rcdir}"
+  touch "${sapphrc_profile}/"{include,exclude}
+  echo '#!/bin/bash'|tee "${sapphrc_profile_rc}" > /dev/null
+  echo ".sapphrc/${profile_name}"|tee "${sapphrc_profile}/include" > /dev/null
+  chmod +x "${sapphrc_profile_rc}"
+  echo "Successfully created '${profile_name}'"
+  join "${profile_name}"
+}
+
+remove(){
+  echo "WARNING: really remove profile '${profile_name}'?"
+  echo "~${sapphrc_profile#$HOME} and all its contents will be deleted!"
+  read -p "Confirm removal (y/N): " confirm_remove
+  if [[ "${confirm_remove}" =~ ^([yY][eE][sS]|[yY])$ ]];then
+    leave
+    echo "removing '${profile_name}'"
+    rm -r "${sapphrc_profile}"
+    echo "Profile '${profile_name}' has been removed. Be sure to leave the profile on other machines/accounts to avoid synchronization issues."
+  fi
+}
+
+join(){
+  if grep -q ^"${profile_name}"$ "${sapphrc_config}/active_profiles";then
+    echo "Already joined ${profile_name}, nothing to do."
+  else
+    echo "${profile_name}"|tee -a "${sapphrc_config}/active_profiles" > /dev/null
+    echo "Successfully joined '${profile_name}'!"
+  fi
+}
+
+leave(){
+  if grep -q ^"${profile_name}"$ "${sapphrc_config}/active_profiles";then
+    sed -i '/^'"${profile_name}"'$/d' "${sapphrc_config}/active_profiles"
+    [ -e "${HOME}/.sapphrc/${profile_name}" ] && rm "${HOME}/.sapphrc/${profile_name}"
+    echo "Successfully left '${profile_name}'!"
+  else
+    echo "You have not joined '${profile_name}', nothing to do."
+  fi
+}
+
+list(){
+  echo "${bold}Active profiles:${normal}"
+  cat "${sapphrc_config}/active_profiles"
+  echo "${bold}Available profiles:${normal}"
+  ls "${sapphrc_config}/backups/" | cat
+}
+
+case $COMMAND in
+  create|remove|join|leave )
+    validate_backupdir;shift 1;
+    validate_profile $@;;&
+  create )
+    create $@;;
+  remove )
+    remove $@;;
+  join )
+    join $@;;
+  leave )
+    leave $@;;
+  list )
+    list;;
+  *|usage )
+    usage;;
+esac

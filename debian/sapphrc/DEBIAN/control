@@ -1,0 +1,12 @@
+Package: sapphrc
+Version: 1.2.1
+Architecture: all
+Maintainer: Penelope Gwen <support@pogmom.me>
+Installed-Size: 38
+Depends: git, rsync
+Section: unknown
+Priority: optional
+Multi-Arch: foreign
+Homepage: https://github.com/SapphicLinux/sapphrc
+Description: dotfiles backup and profiles
+ <Insert long description, indented with spaces.>

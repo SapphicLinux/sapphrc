@@ -1,0 +1,6 @@
+Usage: spm command [options]
+
+Sapphrc is a dotfiles manager with support for multiple profile and git synchonization
+
+Commands:
+  usage: Print this dialogue
