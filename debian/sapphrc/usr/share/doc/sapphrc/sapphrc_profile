@@ -1,0 +1,8 @@
+profile: manage sapphrc profiles
+  usage:
+    sapphrc profile [action] (profile)
+  actions:
+    create: creates a new sapphrc profile and joins it
+    remove: leaves and deletes an existing sapphrc profile
+    join: joins an existing sapphrc profile
+    leave: leaves an existing sapphrc profile
