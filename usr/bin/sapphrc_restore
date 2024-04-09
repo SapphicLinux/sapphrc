@@ -5,6 +5,7 @@ source /lib/sapphrc/sapphrc-font
 validate_backupdir
 
 cd "$HOME/.config/sapphrc/backups"
+git config pull.rebase false
 git pull --no-edit
 
 sapphrc_config="$HOME/.config/sapphrc"

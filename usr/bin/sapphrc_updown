@@ -10,15 +10,15 @@ gs="$(git status | grep -i 'modified')"
 git fetch origin
 reslog=$(git log HEAD..origin/main --oneline)
 
-if [[ "${gs}" == *"modified"* && "${reslog}" != "" ]];then
-#local AND remote changes exist
-  echo "local backup reposity conflict with remote - please manually fix this!"
-  exit 1
+echo $gs
+echo " "
+echo $reslog
+
+if [[ "${reslog}" == "" ]];then
+#remote changes exist
+  sapphrc_restore
 elif [[ $gs == *"modified"* ]];then
 #local changes exist
   sapphrc_push
-elif [[ "${reslog}" == "" ]];then
-#remote changes exist
-  sapphrc_restore
 fi
 exit

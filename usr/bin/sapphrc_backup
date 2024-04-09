@@ -17,3 +17,5 @@ do
   echo "${backup_homedir}"
   rsync -arvSH --files-from="${include_list}" --exclude-from="${exclude_list}" --exclude '.config/sapphrc/' "${HOME}" "${backup_homedir}"
 done
+
+find ${HOME}/.config/sapphrc/backups/ -name *.swp -type f -exec rm {} \;
