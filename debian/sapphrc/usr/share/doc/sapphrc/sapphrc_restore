@@ -1,3 +1,0 @@
-backup: update current configuration from available profile updates
-  usage:
-    sapphrc restore
